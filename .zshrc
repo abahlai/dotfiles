@@ -5,6 +5,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Git Subrepo source
+source ~/.git-subrepo/.rc
+
 # Terraform aliases
 [ -f ~/.terraform_aliases ] && source ~/.terraform_aliases
 function terraform() { echo "+ terraform $@"; command terraform $@; }
@@ -12,8 +15,24 @@ function terraform() { echo "+ terraform $@"; command terraform $@; }
 [ -f ~/.terragrunt_aliases ] && source ~/.terragrunt_aliases
 function terragrunt() { echo "+ terragrunt $@"; command terragrunt $@; }
 
+# direnv hook
+eval "$(direnv hook zsh)"
+
+# Awesome oneliners
+b64d () {
+  echo "$1" | base64 -d ; echo
+}
+
+b64e () {
+  echo -n "$1" | base64
+}
+
+alias cls='printf "\033c"'
+alias kneat='kubectl neat'
+alias cf='kubectl-cf'
+
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/Library/Python/3.8/bin:$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/Library/Python/3.8/bin:$HOME/bin:/usr/local/bin:$HOME/.krew/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/abahl/.oh-my-zsh"
@@ -84,7 +103,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git fzf)
+plugins=(git fzf kubectl docker docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -114,8 +133,18 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ls=exa
+alias ctx=kubectx
+alias ns=kubens
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+### ZSH completions
+if type brew &>/dev/null; then
+    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+    autoload -Uz compinit
+    compinit
+  fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
