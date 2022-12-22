@@ -30,9 +30,10 @@ b64e () {
 alias cls='printf "\033c"'
 alias kneat='kubectl neat'
 alias cf='kubectl-cf'
+alias sad='ssh-add -d'
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/Library/Python/3.8/bin:$HOME/bin:/usr/local/bin:$HOME/.krew/bin:$PATH
+export PATH=$HOME/Library/Python/3.9/bin:$HOME/bin:/usr/local/bin:$HOME/.krew/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/abahl/.oh-my-zsh"
@@ -135,6 +136,7 @@ source $ZSH/oh-my-zsh.sh
 alias ls=exa
 alias ctx=kubectx
 alias ns=kubens
+alias tlp=telepresence
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -148,3 +150,6 @@ if type brew &>/dev/null; then
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# KSOPS
+export XDG_CONFIG_HOME=$HOME/.config
