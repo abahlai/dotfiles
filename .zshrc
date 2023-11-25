@@ -5,8 +5,32 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Git Subrepo source
-source ~/.git-subrepo/.rc
+source /opt/homebrew/opt/powerlevel10k/powerlevel10k.zsh-theme
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+PATH_DIRS=(
+  "${HOME}/bin"
+  "${KREW_ROOT:-${HOME}/.krew}/bin"
+  "/opt/homebrew/bin/"
+  "/usr/local/bin"
+  "/usr/bin"
+  "/bin"
+  "/usr/sbin"
+  "/sbin"
+  "${PATH}"
+)
+export PATH=${"${PATH_DIRS[*]}"// /:}
+
+### Load aliases
+for filename in ~/.dotfiles/*; do
+  source $filename
+done
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Terraform aliases
 [ -f ~/.terraform_aliases ] && source ~/.terraform_aliases
@@ -27,120 +51,15 @@ b64e () {
   echo -n "$1" | base64
 }
 
-alias cls='printf "\033c"'
-alias kneat='kubectl neat'
-alias cf='kubectl-cf'
-alias sad='ssh-add -d'
+# KSOPS
+export XDG_CONFIG_HOME=$HOME/.config
 
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/Library/Python/3.9/bin:$HOME/bin:/usr/local/bin:$HOME/.krew/bin:$PATH
+# KubeSwitch
+INSTALLATION_PATH=$(brew --prefix switch) && source $INSTALLATION_PATH/switch.sh
 
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/abahl/.oh-my-zsh"
+# Autocompletion
+rm -f ~/.zcompdump;
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to automatically update without prompting.
-# DISABLE_UPDATE_PROMPT="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# Caution: this setting can cause issues with multiline prompts (zsh 5.7.1 and newer seem to work)
-# See https://github.com/ohmyzsh/ohmyzsh/issues/5765
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git fzf kubectl docker docker-compose)
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-alias ls=exa
-alias ctx=kubectx
-alias ns=kubens
-alias tlp=telepresence
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-### ZSH completions
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
@@ -148,8 +67,47 @@ if type brew &>/dev/null; then
     compinit
   fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 
-# KSOPS
-export XDG_CONFIG_HOME=$HOME/.config
+# Use this setting if you want to disable marking untracked files under VCS as dirty.
+# This makes repository status checks for large repositories much, much faster.
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+SHOW_AWS_PROMPT=false
+COMPLETION_WAITING_DOTS=true
+
+# History
+HISTFILE="$HOME/.zsh_history"
+HISTIGNORE="&:exit:reset:clear:zh"
+setopt append_history
+setopt hist_ignore_space
+setopt HIST_IGNORE_DUPS
+setopt sharehistory
+setopt INC_APPEND_HISTORY
+setopt HIST_REDUCE_BLANKS
+
+# Options
+setopt autocd
+autoload -U add-zsh-hook
+
+DISABLE_AUTO_TITLE="true"
+
+# Override auto-title when static titles are desired ($ title My new title)
+title() { export TITLE_OVERRIDDEN=1; echo -en "\e]0;$*\a"}
+# Turn off static titles ($ autotitle)
+autotitle() { export TITLE_OVERRIDDEN=0 }; autotitle
+# Condition checking if title is overridden
+overridden() { [[ $TITLE_OVERRIDDEN == 1 ]]; }
+
+# Show cwd when shell prompts for input.
+precmd() {
+  if overridden; then return; fi
+  pwd=$(pwd) # Store full path as variable
+  cwd=${pwd##*/} # Extract current working dir only
+  print -Pn "\e]0;$cwd\a" # Replace with $pwd to show full path
+}
+
+# Prepend command (w/o arguments) to cwd while waiting for command to complete.
+preexec() {
+  if overridden; then return; fi
+  printf "\033]0;%s\a" "${1%% *} | $cwd" # Omit construct from $1 to show args
+}

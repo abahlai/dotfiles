@@ -1,0 +1,18 @@
+# Rename existing tools
+alias _cat=`which cat`
+#alias _curl=`which curl`
+alias _ls="/bin/ls"
+alias _du=`which du`
+alias _df=`which df`
+
+alias cat='bat '
+#alias curl='curlie'
+alias ls='exa --group-directories-first --icons --header --git --ignore-glob=.git'
+alias du='dust'
+alias df='duf -hide special'
+
+# Custom
+alias cls='printf "\033c"'
+alias sad='ssh-add -d'
+alias tlp=telepresence
+alias gst='git status'

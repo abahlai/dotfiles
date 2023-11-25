@@ -1,0 +1,12 @@
+alias k='kubectl '
+alias kx='kube-exec '
+alias kl='kube-logs '
+alias kshell='kube-shell '
+alias kall='kube-all '
+alias kneat='kubectl neat '
+alias fix-broken-replicasets='kube-clean-replicasets '
+alias kube-forward='kube-forward-all '
+
+source <(kubectl completion zsh)
+# tkn currently doesn't work with Mac ARM chips
+# source <(tkn completion zsh)
